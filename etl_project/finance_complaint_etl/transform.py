@@ -45,7 +45,7 @@ class Transform:
                 transform_file_name = f"{file_name.split('.')[0]}.parquet"
                 transform_file_path = os.path.join(self.transform_config.transform_dir, transform_file_name)
                 df.write.parquet(transform_file_path)
-                transform_file_path = "file:///"+os.path.join(self.transform_config.transform_dir, transform_file_name)
+                transform_file_path = os.path.join(self.transform_config.transform_dir, transform_file_name)
 
                 df.write.parquet(transform_file_path)
             transform_output = TransformOutput(transform_dir=self.transform_config.transform_dir)

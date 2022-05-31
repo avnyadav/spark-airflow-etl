@@ -20,7 +20,7 @@ else:
 if not shutil.which("virtualenv"):
     log.warning("The tutorial_taskflow_api_etl_virtualenv example DAG requires virtualenv, please install it.")
 else:
-    @dag(schedule_interval=None, start_date=datetime.now(), catchup=False, tags=['finance_complaint'])
+    @dag(schedule_interval='@hourly', start_date=datetime(2022, 5, 31), catchup=False, tags=['finance_complaint'])
     def finance_complaint_etl():
         @task(multiple_outputs=True)
         def initialization():
@@ -60,7 +60,7 @@ else:
             use_dill=True,
             requirements=[package_names, "pyspark==3.2.1", "findspark"])
         def transform(config):
-           
+            
             from etl_project.finance_complaint_config.config import TransformConfig
             from etl_project.finance_complaint_constant import constant
             from etl_project.finance_complaint_etl.extract import ExtractOutput
@@ -72,8 +72,8 @@ else:
             import os
             data = json.dumps(config)
             import subprocess
-            # subprocess.Popen(["pip","install","pyspark==3.2.1"])
-            # subprocess.Popen(["pip", "install", "findspark"])
+            subprocess.Popen(["pip","install","pyspark==3.2.1"])
+            subprocess.Popen(["pip", "install", "findspark"])
             # subprocess.Popen(["spark-submit", "dags/etl_project/finance_complaint_etl/transform.py", data])
             extract_output = ExtractOutput(*(extract_output))
             transform_config = TransformConfig(*(transform_config))
@@ -125,6 +125,7 @@ else:
             pipeline_config = config[constant.CONFIG_KEY_NAME][constant.PIPELINE_CONFIG_KEY_NAME]
             pipeline_config = PipelineConfig(*(pipeline_config))
             import shutil
+            print(pipeline_config.pipeline_dir)
             shutil.rmtree(pipeline_config.pipeline_dir)
 
         init_config = initialization()
